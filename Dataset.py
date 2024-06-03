@@ -5,6 +5,9 @@ import torchvision
 import random
 from tqdm import tqdm
 from PIL import Image
+from torch . utils . data . dataset import Dataset
+
+
 def load_latents(latent_path):
     '''
 Simple utility to save latents to speed up ldm training
@@ -17,6 +20,7 @@ Simple utility to save latents to speed up ldm training
         for k,v in s.items():
             latents_maps[k] = v[0]
     return latents_maps
+
 class CelebDataset(Dataset) :
     '''
     Celeb dataset will by default centre crop and resize the images .
