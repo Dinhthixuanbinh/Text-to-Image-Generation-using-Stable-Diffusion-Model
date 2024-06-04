@@ -1,6 +1,7 @@
 
 import torch
 import os
+import torchvision
 import numpy as np
 from tqdm import tqdm
 from config import config
@@ -16,6 +17,8 @@ import torch.utils
 import torch.utils.data
 from torch.utils.data import DataLoader
 from torch.optim import Adam
+from torchvision.utils import make_grid
+from PIL import Image
 
 
 
@@ -149,4 +152,62 @@ vae.eval()
 vae = vae.to(device)
 
 # genarate
+with torch.no_grad():
+    xt= torch.randn((1,latents_channel, 64,64)).to(device)
+    text_prompt = ['She is a woman with blond hair . She is wearing lipstick.']
+    neg_prompt = ['He is a man. ']
+    empty_prompt = ['']
+    text_prompt_embed = get_text_representation(text_prompt,
+                                                text_tokenizer,
+                                                text_model,
+                                                device)
+# Can replace empty prompt with negative prompt
 
+empty_text_embed = get_text_representation(empty_prompt, text_tokenizer, text_model, device)
+assert empty_text_embed.shape == text_prompt_embed.shape
+
+uncond_input = {
+    'text' : empty_text_embed
+}
+cond_input = {
+    'text': text_prompt_embed
+}
+# ##############################################
+# By default classifier free guidance is disabled
+# Change value in config or change default value here to enable it
+cf_guidance_scale = train_config['cf_guidance_scale']
+
+#################### Sampling Loop ##########################
+
+for i in tqdm(reversed(range(diffusion_config['num_timesteps']))):
+    # Get prediction of noise
+    t = (torch.ones((xt.shape[0],)) * i ).long().to(device)
+    noise_pred_cond = model(xt, t, cond_input)
+
+    if cf_guidance_scale > 1:
+        noise_pred_uncond = model(xt,t, uncond_input)
+        noise_pred = noise_pred_uncond + cf_guidance_scale * (noise_pred_cond -noise_pred_uncond)
+    else:
+        noise_pred =  noise_pred_cond
+    # Use scheduler to get x0 and xt -1
+    xt , x0_pred = scheduler.sample_prev_timestep(xt, noise_pred, torch.as_tensor(i).to(device))
+
+    # Save x0
+    if i == 0:
+        # Decode ONLY the final iamge to save time
+        ims = vae.decode(xt).sample
+    else:
+        ims = x0_pred
+
+    ims = torch.clamp(ims, -1. , 1.).detach().cpu()
+    ims = (ims +1) / 2
+    grid = make_grid(ims, nrow= 1)
+    img = torchvision.transforms.ToPILImage()(grid)
+
+    if not os.path.exists(os.path.join(train_config['task_name'], 'cond_text_samples')):
+        os.mkdir(os.path.join(train_config['task_name'], 'cond_text_samples'))
+    img.save(os.path.join(train_config['task_name'], 'cond_text_samples', 'x0_{}.png'.format(i)))
+    img.close()
+
+# Show image
+test_image = Image.open(os.path.join(train_config['task_name'], 'cond_text_samples','x0_{}.png'.format(0) ))
