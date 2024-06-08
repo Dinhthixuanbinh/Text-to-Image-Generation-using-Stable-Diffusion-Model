@@ -5,7 +5,7 @@ import torchvision
 import random
 from tqdm import tqdm
 from PIL import Image
-from torch . utils . data . dataset import Dataset
+from torch.utils.data.dataset import Dataset
 
 
 def load_latents(latent_path):
@@ -24,14 +24,14 @@ Simple utility to save latents to speed up ldm training
 class CelebDataset(Dataset) :
     '''
     Celeb dataset will by default centre crop and resize the images .
-    This can be replaced by any other dataset . As long as all the images
+    This can be replaced by any other dataset. As long as all the images
     are under one directory .
     '''
     def __init__ (self, split, im_path, im_size = 256, im_channels = 3, im_ext = 'jpg',
                   use_latents = False, latent_path = None, condition_config = None):
         self.split = split
         if self.split != 'all':
-            self.split_filter = pickle.load(open(f'./data/CelebAMask-HQ/{self.split}.pickle ', 'rb'))
+            self.split_filter = pickle.load(open(f'./CelebAMask-HQ/{self.split}.pickle', 'rb'))
         self.im_size = im_size
         self.im_channels = im_channels
         self.im_ext = im_ext

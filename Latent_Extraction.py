@@ -60,7 +60,7 @@ with torch.no_grad():
                                    train_config['vqvae_latent_dir_name'])
         latent_fnames = glob.glob(os.path.join(train_config['task_name'], 
                                                train_config['vqvae_latent_dir_name'], '*.pkl'))
-        assert len(latent_fnames) == 0, ' Latents already present . Delete all latent files and re -run'
+        assert len(latent_fnames) == 0, ' Latents already present. Delete all latent files and re-run'
         if not os.path.exists(latent_path):
             os.mkdir(latent_path)
         print('Saving Latents for {}'.format(dataset_config['name']))

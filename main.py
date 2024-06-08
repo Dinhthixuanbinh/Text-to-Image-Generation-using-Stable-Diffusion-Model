@@ -44,8 +44,8 @@ condition_style = condition_config['condition_types']
 
 with torch.no_grad() :
     # Load tokenizer and text model based on config
-    text_tokenizer = CLIPTokenizer.from_pretrained('openai /clip-vit-base-patch16')
-    text_model = CLIPTextModel.from_pretrained('openai /clip-vit-base-patch16 ').to(device)
+    text_tokenizer = CLIPTokenizer.from_pretrained('openai/clip-vit-base-patch16')
+    text_model = CLIPTextModel.from_pretrained('openai/clip-vit-base-patch16').to(device)
     text_model.eval()
 
     empty_text_embed = get_text_representation([''], text_tokenizer, text_model, device)
