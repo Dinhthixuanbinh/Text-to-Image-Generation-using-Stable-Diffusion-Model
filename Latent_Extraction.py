@@ -28,7 +28,7 @@ idxs = torch.randint(0, len(im_dataset) - 1, (num_images,))
 ims = torch.cat([im_dataset[idx][None , :] for idx in idxs])
 ims = ims.to(device)
 
-vae = VQModel.from_pretrained('CompVis/ldm-celebahq-256', subforder = "vqvae")
+vae = VQModel.from_pretrained("CompVis/ldm-celebahq-256", subfolder="vqvae")
 vae.eval()
 vae = vae.to(device)
 

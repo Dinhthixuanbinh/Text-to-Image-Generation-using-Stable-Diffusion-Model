@@ -18,11 +18,11 @@ class Unet(nn.Module):
         self.num_up_layers = model_config['num_up_layers']
         self.attns = model_config['attn_down']
         self.norm_channels = model_config['norm_channels']
-        self.num_heads = model_config['num_head']
+        self.num_heads = model_config['num_heads']
         self.conv_out_channels = model_config['conv_out_channels']
 
         #  Validating Unet Model configurations
-        assert self.mid_channels[0] == self.dowm_sample[-1]
+        assert self.mid_channels[0] == self.down_channels[-1]
         assert self.mid_channels[-1] == self.down_channels[-2]
         assert len(self.dowm_sample) == len(self.down_channels) -1
         assert len(self.attns) == len(self.down_channels) - 1
@@ -60,14 +60,12 @@ class Unet(nn.Module):
             self.mids = nn.ModuleList([])
             # Build the Midblocks
             for i in range(len(self.mid_channels) - 1):
-                self.mids.append(DownBlock(self.mid_channels[i], self.mid_channels[i +1], self.t_emb_dim,
-
+                self.mids.append(MidBlock(self.mid_channels[i], self.mid_channels[i +1], self.t_emb_dim,
                                         num_heads = self.num_heads,
                                         num_layers = self.num_mid_layers,
                                         norm_channels = self.norm_channels,
                                         cross_attn = self.text_cond,
-                                        context_dim = self.text_embed_dim
-                                         ))
+                                        context_dim = self.text_embed_dim))
             self.ups = nn.ModuleList([])
             #  build the Upblocks
 
