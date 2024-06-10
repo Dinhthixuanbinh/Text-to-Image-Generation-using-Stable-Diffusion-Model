@@ -8,7 +8,7 @@ class Unet(nn.Module):
     Unet model comprising Down blocks , Midblocks and Uplocks
     '''
     def __init__(self, im_channels, model_config):
-        super().__init__
+        super().__init__()
         self.down_channels = model_config['down_channels']
         self.mid_channels = model_config['mid_channels']
         self.t_emb_dim = model_config['time_emb_dim']

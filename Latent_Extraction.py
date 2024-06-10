@@ -25,7 +25,7 @@ im_dataset = CelebDataset(split= 'all',
 data_loader = DataLoader(im_dataset, batch_size= 2, shuffle= True)
 
 idxs = torch.randint(0, len(im_dataset) - 1, (num_images,))
-ims = torch.cat([im_dataset[idx][None , :] for idx in idxs])
+ims = torch.cat([im_dataset[idx][None , :] for idx in idxs]).float()
 ims = ims.to(device)
 
 vae = VQModel.from_pretrained("CompVis/ldm-celebahq-256", subfolder="vqvae")

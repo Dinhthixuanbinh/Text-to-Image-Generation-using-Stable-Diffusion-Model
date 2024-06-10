@@ -75,7 +75,7 @@ class CelebDataset(Dataset) :
                 captions_im = []
                 with open(os.path.join(im_path, 'celeba-caption/{}.txt'.format(im_name))) as f:
                     for line in f.readlines():
-                        captions_im.append(line.split())
+                        captions_im.append(line.strip())
                 texts.append(captions_im)
 
         if 'text' in self.condition_types:

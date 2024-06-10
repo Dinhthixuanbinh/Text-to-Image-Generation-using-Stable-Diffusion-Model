@@ -19,8 +19,8 @@ class LinearNoiseScheduler:
     def add_noise(self, original, noise, t):
         original_shape = original.shape
         batch_size = original_shape[0]   
-        sqrt_alpha_cum_prod  = self.sqrt_alpha_cum_prod(original.device)[t].reshape(batch_size)
-        sqrt_one_minus_alpha_cum_prod = self.sqrt_one_minus_alpha_cum_prod(original.device)[t].reshape(batch_size)
+        sqrt_alpha_cum_prod  = self.sqrt_alpha_cum_prod.to(original.device)[t].reshape(batch_size)
+        sqrt_one_minus_alpha_cum_prod = self.sqrt_one_minus_alpha_cum_prod.to(original.device)[t].reshape(batch_size)
 
     #  Reshape till (B ,) becomes (B ,1 ,1 ,1) if image is (B,C,H,W)
         for _ in range(len(original_shape) - 1):
@@ -48,9 +48,9 @@ class LinearNoiseScheduler:
         if t == 0:
             return mean , x0
         else:
-            variance = (1- self.alpha_cum_prod.to(xt.device)[t-1] ) /(1- self.alpha_cum_prod.to(xt.device)[t])
+            variance = (1- self.alpha_cum_prod.to(xt.device)[t-1] ) /(1.- self.alpha_cum_prod.to(xt.device)[t])
             variance = variance * self.betas.to(xt.device)[t]
             sigma = variance ** 0.5
             z = torch.rand(xt.shape).to(xt.device)
 
-        return mean + sigma * z , x0
+            return mean + sigma * z , x0

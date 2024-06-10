@@ -55,9 +55,8 @@ im_dataset = CelebDataset(split= 'train',
                           im_size= dataset_config['im_size'],
                           im_channels= dataset_config['im_channels'],
                           use_latents= True,
-                          latent_path= os.path.join(train_config['task_name'],
-                                                    train_config['vqvae_latent_dir_name']),
-                                                    condition_config= condition_config
+                          latent_path= os.path.join(train_config['task_name'], train_config['vqvae_latent_dir_name']),
+                          condition_config= condition_config
                           )
 filters = list(range(0, len(im_dataset), 10))
 im_dataset = torch.utils.data.Subset(im_dataset, filters)
@@ -67,8 +66,7 @@ data_loader = DataLoader(im_dataset,
                          shuffle= True)
 
 model = Unet(im_channels= latents_channel,
-             model_config= diffusion_model_config
-).to(device)
+             model_config= diffusion_model_config).to(device)
 
 model.train()
 
