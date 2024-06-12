@@ -6,7 +6,7 @@ import random
 from tqdm import tqdm
 from PIL import Image
 from torch.utils.data.dataset import Dataset
-
+from config import config
 
 def load_latents(latent_path):
     '''
@@ -39,7 +39,7 @@ class CelebDataset(Dataset) :
         self.latent_maps = None
         self.use_latents = False
 
-        self.condition_types = [] if condition_config is None else condition_config['condition_types']
+        self.condition_types = config['ldm_params']['condition_config']['condition_types']
         self.images , self.texts = self.load_images(im_path)
 
         # Whether to load images or to load latents
@@ -71,14 +71,14 @@ class CelebDataset(Dataset) :
                     continue
             ims.append(fname)
 
-            if 'text' in self.condition_types:
+            if "text" in self.condition_types:
                 captions_im = []
-                with open(os.path.join(im_path, 'celeba-caption/{}.txt'.format(im_name))) as f:
+                with open(os.path.join(im_path,'celeba-caption/{}.txt'.format(im_name))) as f:
                     for line in f.readlines():
                         captions_im.append(line.strip())
                 texts.append(captions_im)
 
-        if 'text' in self.condition_types:
+        if "text" in self.condition_types:
                 assert len(texts) == len(ims), "Condition Type Text but could not find captions for all images"
         print('Found {} images'.format(len(ims)))
         print('Found {} captions'.format(len(texts)))

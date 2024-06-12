@@ -1,6 +1,6 @@
 config = {
    "dataset_params": {
-       "im_path":"data/CelebAMask-HQ",
+       "im_path":"/content/CelebAMask-HQ",
        "im_channels": 3 ,
        "im_size": 256 ,
        "name":"celebhq"
@@ -11,8 +11,8 @@ config = {
        "beta_end": 0.012
     } ,
    "ldm_params": {
-       "down_channels": [128 , 256 , 384 , 512] ,
-       "mid_channels": [512 , 384] ,
+       "down_channels": [256,  384 , 512, 768] ,
+       "mid_channels": [768,512] ,
        "down_sample": [ True , True , True ] ,
        "attn_down": [ True , True , True ] ,
        "time_emb_dim": 512 ,
@@ -25,18 +25,18 @@ config = {
        "condition_config": {
            "condition_types": ["text"] ,
            "text_condition_config": {
-           "text_embed_model":"clip",
-           "train_text_embed_model": False ,
-           "text_embed_dim": 512 ,
-           "cond_drop_prob": 0.1
+              "text_embed_model":"clip",
+              "train_text_embed_model": False ,
+              "text_embed_dim": 512 ,
+              "cond_drop_prob": 0.1
             }
-        }       
+        }
     } ,
    "train_params": {
        "seed": 1111 ,
        "task_name":"celebhq",
-       "ldm_batch_size": 1 ,
-       "ldm_epochs": 30 ,
+       "ldm_batch_size": 16 ,
+       "ldm_epochs": 100 ,
        "num_samples": 1 ,
        "num_grid_rows": 1 ,
        "ldm_lr": 0.000005 ,
