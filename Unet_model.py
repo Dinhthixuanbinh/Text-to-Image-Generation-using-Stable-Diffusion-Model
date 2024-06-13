@@ -90,7 +90,7 @@ class Unet(nn.Module):
         out = self.conv_in(x)
 
         # t_emb -> B x t_emb_dim
-        t_emb = get_time_embedding(torch.as_tesor(t).long(), self.t_emb_dim)
+        t_emb = get_time_embedding(torch.as_tensor(t).long(), self.t_emb_dim)
         t_emb = self.t_proj(t_emb)
         context_hidden_states = None
         context_hidden_states = cond_input['text']
