@@ -45,7 +45,7 @@ class CelebDataset(Dataset) :
         # Whether to load images or to load latents
         if use_latents and latent_path is not None:
             latent_maps = load_latents(latent_path)
-            if len(latent_maps) >= len(self.images):
+            if len(latent_maps) < len(self.images):
                 self.use_latents = True
                 self.latent_maps = latent_maps
                 print('Found {} latens'. format(len(self.latent_maps)))
